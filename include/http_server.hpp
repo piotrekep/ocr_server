@@ -1,5 +1,5 @@
-#ifndef HTTP_SERVER_H
-#define HTTP_SERVER_H
+#ifndef HTTP_SERVER_HPP
+#define HTTP_SERVER_HPP
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
@@ -117,7 +117,14 @@ void handle_request(
     // Respond to POST request
     if(req.method() == http::verb::post)
     {
-        std::cout << req;
+        auto nazwa_pliku = req.find("nazwa");
+        if(nazwa_pliku != req.end())
+        {
+          auto customValue = nazwa_pliku->value();
+          std::cout << customValue << "\n";
+          std::cout << req.body() << "\n";
+        }
+       
         http::response<http::string_body> res{http::status::ok, req.version()};
         res.set(http::field::server, "Boost.Beast");
         res.set(http::field::content_type, "text/plain");

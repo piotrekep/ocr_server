@@ -2,7 +2,7 @@ CXX      = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
 LDFLAGS  = -lboost_system -lpthread
 
-SRCS     = main.cpp src/http_server.cpp
+SRCS     = main.cpp src/http_server.cpp src/datastore.cpp
 OBJS     = $(SRCS:.cpp=.o)
 TARGET   = http_server
 

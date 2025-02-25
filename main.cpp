@@ -1,13 +1,15 @@
-#include "http_server.h"
+#include "http_server.hpp"
 #include <boost/asio.hpp>
 #include <iostream>
 #include <cstdlib>
 #include <memory>
 #include <string>
 #include <thread>
+#include "datastore.hpp"
 
 int main()
 {
+    DataStore rxBuffer; 
     try
     {
         auto const address = net::ip::make_address("192.168.1.155");
