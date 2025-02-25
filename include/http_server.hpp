@@ -11,6 +11,7 @@
 #include <memory>
 #include <string>
 #include <thread>
+#include "datastore.hpp"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -30,7 +31,7 @@ template<class Body, class Allocator, class Send>
 void handle_request(
     beast::string_view doc_root,
     http::request<Body, http::basic_fields<Allocator>>&& req,
-    Send&& send)
+    Send&& send, DataStore* rxBuffer)
 {
     // Returns a bad request response
     auto const bad_request =
@@ -176,6 +177,6 @@ struct send_lambda
 };
 
 // Handles an HTTP server connection.
-void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root);
+void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root,DataStore* rxBuffer);
 
 #endif // HTTP_SERVER_H

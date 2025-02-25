@@ -26,7 +26,7 @@ int main()
             tcp::socket socket{ioc};
             acceptor.accept(socket);
             // Launch the session in a separate thread
-            std::thread{std::bind(&do_session, std::move(socket), doc_root)}.detach();
+            std::thread{std::bind(&do_session, std::move(socket), doc_root, &rxBuffer)}.detach();
         }
     }
     catch (const std::exception& e)
