@@ -11,6 +11,8 @@
 #include <memory>
 #include <string>
 #include <thread>
+#include <opencv2/opencv.hpp>
+#include <vector>
 #include "datastore.hpp"
 
 namespace beast = boost::beast;
@@ -118,18 +120,30 @@ void handle_request(
     // Respond to POST request
     if(req.method() == http::verb::post)
     {
+
+        http::response<http::string_body> res{http::status::ok, req.version()};
+
         auto nazwa_pliku = req.find("nazwa");
         if(nazwa_pliku != req.end())
         {
           auto customValue = nazwa_pliku->value();
           std::cout << customValue << "\n";
-          std::cout << req.body() << "\n";
+          //std::cout << req.body() << "\n";
+          std::vector<uchar> data(req.body().begin(), req.body().end());
+          cv::Mat img = cv::imdecode(data, cv::IMREAD_ANYCOLOR);
+          if(!img.empty()){
+            res.body() = "jeeest!";
+          }
+          else {
+            res.body() = "niema:(";
+          }
+
         }
        
-        http::response<http::string_body> res{http::status::ok, req.version()};
+        
         res.set(http::field::server, "Boost.Beast");
         res.set(http::field::content_type, "text/plain");
-        res.body() = "File uploaded successfully";
+        //res.body() = "File uploaded successfully";
         res.content_length(size);
         res.prepare_payload();
         return send(std::move(res));

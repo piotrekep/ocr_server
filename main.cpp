@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 #include <thread>
+#include <opencv2/opencv.hpp>
+#include <vector>
 #include "datastore.hpp"
 
 int main()
