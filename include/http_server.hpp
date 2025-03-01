@@ -15,6 +15,7 @@
 #include <vector>
 #include "datastore.hpp"
 
+
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
@@ -33,7 +34,7 @@ template<class Body, class Allocator, class Send>
 void handle_request(
     beast::string_view doc_root,
     http::request<Body, http::basic_fields<Allocator>>&& req,
-    Send&& send, DataStore* rxBuffer)
+    Send&& send, DataStore<cv::Mat>* rxBuffer, DataStore<std::string>* txBuffer)
 {
     // Returns a bad request response
     auto const bad_request =
@@ -132,7 +133,7 @@ void handle_request(
           std::vector<uchar> data(req.body().begin(), req.body().end());
           cv::Mat img = cv::imdecode(data, cv::IMREAD_ANYCOLOR);
           if(!img.empty()){
-            res.body() = "jeeest!";
+            res.body() = std::string("jeeest! ") + std::to_string(rxBuffer->store(img));
           }
           else {
             res.body() = "niema:(";
@@ -191,6 +192,6 @@ struct send_lambda
 };
 
 // Handles an HTTP server connection.
-void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root,DataStore* rxBuffer);
+void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root,DataStore<cv::Mat>* rxBuffer, DataStore<std::string>* txBuffer);
 
 #endif // HTTP_SERVER_H
