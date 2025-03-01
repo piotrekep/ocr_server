@@ -17,7 +17,6 @@ int main()
         auto const address = net::ip::make_address("192.168.1.155");
         auto const port = static_cast<unsigned short>(std::atoi("8080"));
         auto const doc_root = std::make_shared<std::string>(".");
-
         // The io_context is required for all I/O
         net::io_context ioc{1};
 
