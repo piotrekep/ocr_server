@@ -50,7 +50,10 @@ acceptorThread.detach();
    while(1){
     if(!rxBuffer.checkEmpty()){
          std::cout << "elo\n";
-         ocr.loadImage(rxBuffer.get().second);
+         std::pair<int, cv::Mat> elem =rxBuffer.get(0);
+        std::cout << elem.first << "\n";
+        if(elem.first!=-1)
+            ocr.loadImage(elem.second);
          std::cout << ocr.returnText();
         } 
    }
