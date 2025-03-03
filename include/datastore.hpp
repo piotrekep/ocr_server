@@ -21,7 +21,7 @@ public:
             data_.push_back(data);
         }
         id++;
-        return id;
+        return data.first;
     }
 
     
@@ -55,9 +55,9 @@ public:
             if (it != data_.end()) {
                 auto ret = *it;
                 data_.erase(it);
-               return ret;  // Return the whole pair
+               return ret;  
             }
-    return std::make_pair(-1, T());  // Or handle not found appropriately
+    return std::make_pair(-1, T());  
 }
 
     

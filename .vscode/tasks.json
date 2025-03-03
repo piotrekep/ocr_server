@@ -4,7 +4,7 @@
         {
             "label": "CMake Build",
             "type": "shell",
-            "command": "cmake --build build --target http_server",
+            "command": "cmake --build build",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
