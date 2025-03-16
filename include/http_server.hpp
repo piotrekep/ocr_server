@@ -59,6 +59,7 @@ void handle_request(
         res.keep_alive(req.keep_alive());
         res.body() = "The resource '" + std::string(target) + "' was not found.";
         res.prepare_payload();
+        std::cout << req;
         return res;
     };
 

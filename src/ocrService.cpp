@@ -54,6 +54,28 @@ std::string ocrService::returnText(){
     return myString;
 }
 
+std::string ocrService::returnTSVText(){
+    // Page number 0 for the first page; adjust if you have multiple pages.
+    char* outTSV = ocrService::api->GetTSVText(0);
+    std::string tsvString(outTSV);
+    delete [] outTSV; // Free Tesseract's allocated memory
+    return tsvString;
+}
+
+std::string ocrService::returnHOCRText(){
+    // Page number 0 for the first page
+    char* outHOCR = ocrService::api->GetHOCRText(0);
+    std::string hocrString(outHOCR);
+    delete [] outHOCR; // Free Tesseract's allocated memory
+    return hocrString;
+}
+
+ cv::Mat ocrService::checkColorDepth(cv::Mat img){
+    if (img.channels() != 1) {
+         cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
+    }
+    return img;
+ }
 
  bool ocrService::deInit(){
     
@@ -62,3 +84,30 @@ std::string ocrService::returnText(){
 
     return true;
  }
+
+           
+cv::Mat ocrService::filterTest(cv::Mat img){
+    //if (img.channels() != 1) {
+     //    cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
+   // }
+
+    cv::Mat out;
+
+   // cv::bilateralFilter(img, out, 10, 50, 75);
+   
+    if (img.channels() != 1) {
+         cv::cvtColor(img, out, cv::COLOR_BGR2GRAY);
+    }
+    cv::adaptiveThreshold(out, out, 255, 
+                      cv::ADAPTIVE_THRESH_MEAN_C, 
+                      cv::THRESH_BINARY, 51, 5);
+
+    cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE();
+    clahe->setClipLimit(2.0);
+    clahe->apply(out, out);
+
+    cv::morphologyEx(out, out, cv::MORPH_CLOSE, cv::Mat());
+    cv::equalizeHist(out, out);
+
+    return out;
+}

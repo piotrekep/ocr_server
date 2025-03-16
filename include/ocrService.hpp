@@ -22,6 +22,10 @@ public:
   bool loadImage(cv::Mat img);
   bool deInit();
   std::string returnText();
+  std::string returnTSVText();
+  std::string returnHOCRText();
+  cv::Mat checkColorDepth(cv::Mat img);
+  cv::Mat filterTest(cv::Mat img);
 
 
 private:

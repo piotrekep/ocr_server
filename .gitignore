@@ -5,6 +5,8 @@ output/
 CMakeFiles/
 build/
 
+*.jpg
+*.png
 
 # Compiled source #
 ###################
