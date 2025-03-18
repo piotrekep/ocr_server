@@ -7,9 +7,11 @@
 #include <thread>
 #include <opencv2/opencv.hpp>
 #include <chrono>
+#include <fstream>
 #include <vector>
 #include "datastore.hpp"
 #include "ocrService.hpp"
+#include "setWorkDir.hpp"
 
 int main()
 {
@@ -17,6 +19,8 @@ int main()
     DataStore<std::string> txBuffer; 
 
     ocrService ocr;
+
+    setWorkdir();
 
     ocr.initTesseract();
     ocr.setMode(tesseract::PSM_AUTO_ONLY);
@@ -52,13 +56,22 @@ std::thread workerThread([&ocr,&rxBuffer,&txBuffer]() {
     
    while(1){
     if(!rxBuffer.checkEmpty()){
-         std::cout << "elo\n";
-         std::pair<int, cv::Mat> elem =rxBuffer.get();
+        std::pair<int, cv::Mat> elem =rxBuffer.get();
         std::cout << elem.first << "\n";;
-        if(elem.first!=-1)
+        if(elem.first!=-1){
             ocr.loadImage(elem.second);
-         //std::cout << ocr.returnText();
-         std::cout << ocr.returnTSVText();
+        
+            std::string data = ocr.returnHOCRText();
+            std::string filename = std::to_string(elem.first)+".txt"; 
+            std::ofstream outFile("data/"+filename); 
+            if (!outFile) {
+                std::cerr << "Error: Could not open the file for writing." << std::endl;
+                }
+            else{
+                outFile << data;
+                outFile.close();
+            }
+            }
         }
     else
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));

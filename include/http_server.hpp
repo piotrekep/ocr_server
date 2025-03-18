@@ -124,7 +124,6 @@ void handle_request(
     {
 
         http::response<http::string_body> res{http::status::ok, req.version()};
-
         auto nazwa_pliku = req.find("nazwa");
         if(nazwa_pliku != req.end())
         {
@@ -134,7 +133,16 @@ void handle_request(
           std::vector<uchar> data(req.body().begin(), req.body().end());
           cv::Mat img = cv::imdecode(data, cv::IMREAD_ANYCOLOR);
           if(!img.empty()){
-            res.body() = std::string("jeeest! ") + std::to_string(rxBuffer->store(img));
+            int id = rxBuffer->store(img);
+            
+            std::string filename = std::to_string(id) + ".jpg";
+            if (cv::imwrite("data/" + filename, img)) {
+                std::cout << "Image saved successfully!" << std::endl;
+                res.body() = std::string("jeeest! ") + std::to_string(id) + " " + filename;
+            } else {
+                std::cerr << "Error saving image." << std::endl;
+                res.body() = "nie zapisal:(";
+            }
           }
           else {
             res.body() = "niema:(";

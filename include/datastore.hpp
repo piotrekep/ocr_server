@@ -7,6 +7,7 @@
 #include <utility>
 #include <opencv2/opencv.hpp>
 #include <algorithm> 
+#include <chrono>
 
 template <typename T>
 class DataStore {
@@ -14,7 +15,9 @@ public:
     
     int store(const T& input) {
         std::pair<int, T> data;
-        data.first = id;
+        auto now = std::chrono::system_clock::now();
+        auto epoch_seconds = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+        data.first = epoch_seconds;
         data.second = input;
         {
             std::lock_guard<std::mutex> lock(mutex_);
