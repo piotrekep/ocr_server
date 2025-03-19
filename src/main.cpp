@@ -19,7 +19,6 @@
 int main()
 {
     DataStore<cv::Mat> rxBuffer; 
-    DataStore<std::string> txBuffer; 
 
     ocrService ocr;
 
@@ -30,7 +29,7 @@ int main()
     ocr.initTesseract();
     ocr.setMode(tesseract::PSM_AUTO_ONLY);
 
-std::thread acceptorThread([&rxBuffer,&txBuffer]() {
+std::thread acceptorThread([&rxBuffer]() {
     try
     {
         auto const address = net::ip::make_address("192.168.1.147");
@@ -46,7 +45,7 @@ std::thread acceptorThread([&rxBuffer,&txBuffer]() {
             tcp::socket socket{ioc};
             acceptor.accept(socket);
             // Launch the session in a separate thread
-            std::thread{std::bind(&do_session, std::move(socket), doc_root, &rxBuffer, &txBuffer)}.detach();
+            std::thread{std::bind(&do_session, std::move(socket), doc_root, &rxBuffer)}.detach();
         }
     }
     catch (const std::exception& e)
@@ -57,7 +56,7 @@ std::thread acceptorThread([&rxBuffer,&txBuffer]() {
     });
 acceptorThread.detach();  
 
-std::thread workerThread([&ocr,&rxBuffer,&txBuffer]() {
+std::thread workerThread([&ocr,&rxBuffer]() {
     
    while(1){
     if(!rxBuffer.checkEmpty()){

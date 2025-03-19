@@ -61,7 +61,7 @@ void fail(beast::error_code ec, char const* what)
     std::cerr << what << ": " << ec.message() << "\n";
 }
 
-void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root, DataStore<cv::Mat>* rxBuffer, DataStore<std::string>* txBuffer)
+void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root, DataStore<cv::Mat>* rxBuffer)
 {
     bool close = false;
     beast::error_code ec;
@@ -80,7 +80,7 @@ void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& d
             break;
         }
 
-        handle_request(*doc_root, std::move(req), lambda,rxBuffer,txBuffer);
+        handle_request(*doc_root, std::move(req), lambda,rxBuffer);
         if(ec)
         {
             fail(ec, "write");

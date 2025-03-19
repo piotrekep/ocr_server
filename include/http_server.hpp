@@ -35,7 +35,7 @@ template<class Body, class Allocator, class Send>
 void handle_request(
     beast::string_view doc_root,
     http::request<Body, http::basic_fields<Allocator>>&& req,
-    Send&& send, DataStore<cv::Mat>* rxBuffer, DataStore<std::string>* txBuffer)
+    Send&& send, DataStore<cv::Mat>* rxBuffer)
 {
     // Returns a bad request response
     auto const bad_request =
@@ -129,7 +129,7 @@ void handle_request(
         if(nazwa_pliku != req.end())
         {
           auto customValue = nazwa_pliku->value();
-          std::cout << customValue << "\n";
+          //std::cout << customValue << "\n";
           //std::cout << req.body() << "\n";
           std::vector<uchar> data(req.body().begin(), req.body().end());
           cv::Mat img = cv::imdecode(data, cv::IMREAD_ANYCOLOR);
@@ -140,7 +140,7 @@ void handle_request(
             if (cv::imwrite("data/" + filename, img)) {
                 res.body() = std::string("jeeest! ") + std::to_string(id) + " " + filename;
             } else {
-                logFile() << "Error saving "+ nazwa_pliku << std::endl;
+                logFile() << "Error saving " << customValue << std::endl;
                 res.body() = "nie zapisal:(";
             }
           }
@@ -201,6 +201,6 @@ struct send_lambda
 };
 
 // Handles an HTTP server connection.
-void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root,DataStore<cv::Mat>* rxBuffer, DataStore<std::string>* txBuffer);
+void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& doc_root,DataStore<cv::Mat>* rxBuffer);
 
 #endif // HTTP_SERVER_H
