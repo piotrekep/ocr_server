@@ -17,7 +17,6 @@ int setWorkdir(){
 
     // Set the working directory to the directory containing the executable
     fs::current_path(exeDir);
-    std::cout << "Working directory set to: " << fs::current_path() << std::endl;
     
     return 0;
 

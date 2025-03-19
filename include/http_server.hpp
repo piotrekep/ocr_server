@@ -129,8 +129,6 @@ void handle_request(
         if(nazwa_pliku != req.end())
         {
           auto customValue = nazwa_pliku->value();
-          //std::cout << customValue << "\n";
-          //std::cout << req.body() << "\n";
           std::vector<uchar> data(req.body().begin(), req.body().end());
           cv::Mat img = cv::imdecode(data, cv::IMREAD_ANYCOLOR);
           if(!img.empty()){

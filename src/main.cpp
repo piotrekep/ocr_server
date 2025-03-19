@@ -61,7 +61,6 @@ std::thread workerThread([&ocr,&rxBuffer]() {
    while(1){
     if(!rxBuffer.checkEmpty()){
         std::pair<int, cv::Mat> elem =rxBuffer.get();
-        std::cout << elem.first << "\n";;
         if(elem.first!=-1){
             ocr.loadImage(elem.second);
         
