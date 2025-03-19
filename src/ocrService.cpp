@@ -51,6 +51,7 @@ std::string ocrService::returnText(){
     char* outText = ocrService::api->GetUTF8Text(); // dynamically allocated
     std::string myString(outText);  // copy its contents into a std::string
     delete [] outText;                  // free the Tesseract allocation
+    ocrService::api->ClearAdaptiveClassifier();
     return myString;
 }
 
@@ -59,6 +60,7 @@ std::string ocrService::returnTSVText(){
     char* outTSV = ocrService::api->GetTSVText(0);
     std::string tsvString(outTSV);
     delete [] outTSV; // Free Tesseract's allocated memory
+    ocrService::api->ClearAdaptiveClassifier();
     return tsvString;
 }
 
@@ -67,6 +69,7 @@ std::string ocrService::returnHOCRText(){
     char* outHOCR = ocrService::api->GetHOCRText(0);
     std::string hocrString(outHOCR);
     delete [] outHOCR; // Free Tesseract's allocated memory
+    ocrService::api->ClearAdaptiveClassifier();
     return hocrString;
 }
 
