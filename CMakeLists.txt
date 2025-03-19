@@ -23,6 +23,7 @@ add_executable(http_server
     src/datastore.cpp
     src/ocrService.cpp
     src/setWorkDir.cpp
+    src/logger.cpp
 )
 
 # Find and link against the Threads library.

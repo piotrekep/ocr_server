@@ -14,6 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "datastore.hpp"
+#include "logger.hpp"
 
 
 namespace beast = boost::beast;
@@ -137,10 +138,9 @@ void handle_request(
             
             std::string filename = std::to_string(id) + ".jpg";
             if (cv::imwrite("data/" + filename, img)) {
-                std::cout << "Image saved successfully!" << std::endl;
                 res.body() = std::string("jeeest! ") + std::to_string(id) + " " + filename;
             } else {
-                std::cerr << "Error saving image." << std::endl;
+                logFile() << "Error saving "+ nazwa_pliku << std::endl;
                 res.body() = "nie zapisal:(";
             }
           }

@@ -9,9 +9,12 @@
 #include <chrono>
 #include <fstream>
 #include <vector>
+
+
 #include "datastore.hpp"
 #include "ocrService.hpp"
 #include "setWorkDir.hpp"
+#include "logger.hpp"
 
 int main()
 {
@@ -21,6 +24,8 @@ int main()
     ocrService ocr;
 
     setWorkdir();
+    logFile()<< "start log"<<std::endl;
+    //initLogger();
 
     ocr.initTesseract();
     ocr.setMode(tesseract::PSM_AUTO_ONLY);
@@ -34,7 +39,7 @@ std::thread acceptorThread([&rxBuffer,&txBuffer]() {
         // The io_context is required for all I/O
         net::io_context ioc{1};
 
-        // The acceptor receives incoming connections
+       
         tcp::acceptor acceptor{ioc, {address, port}};
         for(;;)
         {
@@ -46,7 +51,7 @@ std::thread acceptorThread([&rxBuffer,&txBuffer]() {
     }
     catch (const std::exception& e)
     {
-        std::cerr << "Error: " << e.what() << std::endl;
+        logFile() << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
     });
@@ -65,7 +70,7 @@ std::thread workerThread([&ocr,&rxBuffer,&txBuffer]() {
             std::string filename = std::to_string(elem.first)+".txt"; 
             std::ofstream outFile("data/"+filename); 
             if (!outFile) {
-                std::cerr << "Error: Could not open the file for writing." << std::endl;
+                logFile() << "Error: Could not open " + filename + " for writing." << std::endl;
                 }
             else{
                 outFile << data;
@@ -78,7 +83,10 @@ std::thread workerThread([&ocr,&rxBuffer,&txBuffer]() {
    }
   
     });
-   workerThread.detach();
-   std::cin.get(); 
-  ocr.deInit(); 
+  workerThread.detach();
+  
+  std::cin.get(); 
+  
+  ocr.deInit();
+  deinitLogger(); 
 }
