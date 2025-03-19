@@ -13,11 +13,12 @@ template <typename T>
 class DataStore {
 public:
     
-    int store(const T& input) {
-        std::pair<int, T> data;
+    int64_t store(const T& input) {
+        std::pair<int64_t, T> data;
         auto now = std::chrono::system_clock::now();
         auto epoch_seconds = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
         data.first = epoch_seconds;
+        data.first = data.first*1000 + id;
         data.second = input;
         {
             std::lock_guard<std::mutex> lock(mutex_);
@@ -28,8 +29,8 @@ public:
     }
 
     
-    void store(int id, const T& input) {
-        std::pair<int, T> data;
+    void store(int64_t id, const T& input) {
+        std::pair<int64_t, T> data;
         data.first = id;
         data.second = input;
         std::lock_guard<std::mutex> lock(mutex_);
@@ -37,7 +38,7 @@ public:
     }
 
     
-    std::pair<int, T> get(){
+    std::pair<int64_t, T> get(){
         std::lock_guard<std::mutex> lock(mutex_);
         if(data_.empty()){
             
@@ -49,9 +50,9 @@ public:
         return element;
     }
 
-    std::pair<int, T> get(int id){
+    std::pair<int64_t, T> get(int64_t id){
         std::lock_guard<std::mutex> lock(mutex_);
-        auto it = std::find_if(data_.begin(),data_.end(),[id](const std::pair<int, T>& element) {
+        auto it = std::find_if(data_.begin(),data_.end(),[id](const std::pair<int64_t, T>& element) {
                 return element.first == id;
             }
             );
@@ -70,8 +71,8 @@ public:
     }
 
 private:
-    inline static int id = 0;
-    std::list<std::pair<int, T>> data_;
+    inline static int64_t id = 0;
+    std::list<std::pair<int64_t, T>> data_;
     mutable std::mutex mutex_;
 };
 

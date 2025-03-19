@@ -6,6 +6,7 @@
 #include <boost/beast/version.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/config.hpp>
+#include <cstdint>
 #include <cstdlib>
 #include <iostream>
 #include <memory>
@@ -132,7 +133,7 @@ void handle_request(
           std::vector<uchar> data(req.body().begin(), req.body().end());
           cv::Mat img = cv::imdecode(data, cv::IMREAD_ANYCOLOR);
           if(!img.empty()){
-            int id = rxBuffer->store(img);
+            auto id = rxBuffer->store(img);
             
             std::string filename = std::to_string(id) + ".jpg";
             if (cv::imwrite("data/" + filename, img)) {
