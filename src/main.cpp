@@ -22,7 +22,7 @@ int main()
 
     ocrService ocr;
 
-    setWorkdir();
+   // setWorkdir();
     logFile()<< "start log"<<std::endl;
     //initLogger();
 
@@ -60,9 +60,12 @@ std::thread workerThread([&ocr,&rxBuffer]() {
     
    while(1){
     if(!rxBuffer.checkEmpty()){
-        std::pair<int, cv::Mat> elem =rxBuffer.get();
+        std::pair<int64_t, cv::Mat> elem =rxBuffer.get();
         if(elem.first!=-1){
-            ocr.loadImage(elem.second);
+            ocr.filterTest(elem.second);
+            
+           /*
+            ocr.loadImage(ocr.filterTest(elem.second));
         
             std::string data = ocr.returnHOCRText();
             std::string filename = std::to_string(elem.first)+".txt"; 
@@ -73,7 +76,7 @@ std::thread workerThread([&ocr,&rxBuffer]() {
             else{
                 outFile << data;
                 outFile.close();
-            }
+            }*/
             }
         }
     else

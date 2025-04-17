@@ -73,7 +73,7 @@ void do_session(tcp::socket& socket, std::shared_ptr<std::string const> const& d
 
         
         http::request_parser<http::string_body> parser;
-        parser.body_limit(10 * 1024 * 1024);
+        parser.body_limit(50 * 1024 * 1024);
         http::read(socket, buffer, parser, ec);
 
         //http::request<http::string_body> req;

@@ -10,12 +10,10 @@ int setWorkdir(){
         std::cerr << "Failed to read /proc/self/exe" << std::endl;
         return 1;
     }
-    buffer[len] = '\0';  // Null-terminate the path
+    buffer[len] = '\0'; 
 
     fs::path exePath(buffer);
     fs::path exeDir = exePath.parent_path();
-
-    // Set the working directory to the directory containing the executable
     fs::current_path(exeDir);
     
     return 0;

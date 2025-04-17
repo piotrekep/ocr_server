@@ -26,7 +26,9 @@ public:
   std::string returnHOCRText();
   cv::Mat checkColorDepth(cv::Mat img);
   cv::Mat filterTest(cv::Mat img);
-
+  cv::Mat Test(cv::Mat img);
+  cv::Mat ApplyMaskWhiteBg(const cv::Mat& src, const cv::Mat& mask);
+  cv::Mat ExtractBlackOnWthite(const cv::Mat& src);
 
 private:
   tesseract::TessBaseAPI *api;
